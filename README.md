@@ -4,7 +4,7 @@ In this work, we aim to introduce Large Language Models (LLMs) as human-like "br
 and vice versa, we enable Argument Reality (AR) system to provide services by external API tools to augment general LLMs specifically for the ARTA use case, so that AR system can better plan which tool to use and when to use based on fully understanding users' need.
 Therefore, there are three key phrase as follows:
 - Phase 1: Develop the workflow using existing LLMs (such as `gpt-3.5-turbo-16k-0613` and `llama2-7b-chat`).
-- Phase 2: Finetune LLMs (such as llama2) with large-scale public datasets and replace the core LLM in the workflow. 
+- Phase 2: Finetune LLMs (such as llama2) with large-scale public datasets and replace the core LLM in the workflow.
 - Phase 3: Create and evaluate ARTA dataset by playing with assistant under the workflow [TODO].
 
 <img src="workflow.png" alt="workflow.png" width="75%"/>
@@ -76,3 +76,26 @@ Check with GPU usage:
 watch -n 1 nvidia-smi
 ```
 
+## How to get the dataset and finetuned model?
+You need this token to login huggingface hug:
+```shell
+# Credential for huggingface hub
+export HF_HOME_TOKEN="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"
+huggingface-cli login
+```
+
+```shell
+# Load dataset directly
+from datasets import load_dataset
+
+# If the dataset is gated/private, make sure you have run huggingface-cli login
+dataset = load_dataset("Jiahuan/teach_edh")
+```
+
+```shell
+# Load model directly
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+tokenizer = AutoTokenizer.from_pretrained("Jiahuan/vox-finetune-llama-2-7b-chat", device_map="auto", trust_remote_code=True, token=True)
+model = AutoModelForCausalLM.from_pretrained("Jiahuan/vox-finetune-llama-2-7b-chat", device_map="auto", trust_remote_code=True, token=True, quantization_config=bnb_config)
+```
