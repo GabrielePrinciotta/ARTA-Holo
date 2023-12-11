@@ -1,0 +1,85 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+
+stages:
+- build
+- test
+- deploy
+
+include:
+- template: Security/SAST.gitlab-ci.yml
+
+build:
+  services:
+  - docker:dind
+  stage: build
+  before_script:
+  - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
+  script:
+  - |
+    if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
+      tag=""
+      echo "Running on default branch '$CI_DEFAULT_BRANCH': tag = 'latest'"
+    else
+      tag=":$CI_COMMIT_REF_SLUG"
+      echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
+    fi
+  - docker build --pull -t "$DOCKER_IMAGE${tag}" .
+  - docker push "$DOCKER_IMAGE${tag}"
+  rules:
+  - if: "$CI_COMMIT_BRANCH"
+    exists:
+    - Dockerfile
+
+build-tags:
+  stage: build
+  before_script:
+  - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USER" --password-stdin
+  script:
+  - docker build --pull -t "$DOCKER_IMAGE:$CI_COMMIT_TAG" -t "$DOCKER_IMAGE:latest"
+    .
+  - docker push "$DOCKER_IMAGE:$CI_COMMIT_TAG"
+  - docker push "$DOCKER_IMAGE:latest"
+  only:
+  - tags
+
+sast:
+  stage: test
+
+unit-test:
+  image: alpine:3.18.0
+  stage: test
+  script:
+  - echo "Running unit tests... This will take about 10 seconds."
+  - sleep 10
+  - echo "Tests passed succesfully"
+
+lint-test:
+  image: alpine:3.18.0
+  stage: test
+  script:
+  - echo "Linting code... This will take about 5 seconds."
+  - sleep 5
+  - echo "No lint issues found."
+
+deploy:
+  image: alpine:3.18.0
+  stage: deploy
+  script:
+  - chmod og= $SSH_PRIVATE_KEY
+  - apk update && apk add openssh-client
+  - ssh -p $SSH_PORT -i $SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $SSH_USER@$SSH_SERVER_IP "docker
+    login -u $DOCKER_USER -p $DOCKER_PASSWORD"
+  - ssh -p $SSH_PORT -i $SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $SSH_USER@$SSH_SERVER_IP "docker
+    pull $DOCKER_IMAGE:$CI_COMMIT_TAG"
+  - ssh -p $SSH_PORT -i $SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $SSH_USER@$SSH_SERVER_IP "docker
+    container rm -f sample-app || true"
+  - ssh -p $SSH_PORT -i $SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $SSH_USER@$SSH_SERVER_IP "docker
+    run -d -p 5000:5000 --name sample-app $DOCKER_IMAGE:$CI_COMMIT_TAG"
+  only:
+  - tags
