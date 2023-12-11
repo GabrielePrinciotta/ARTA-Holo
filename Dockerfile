@@ -14,7 +14,8 @@ ENV HF_HOME_TOKEN="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"
 WORKDIR /app
 
 # Install Git
-RUN apt-get update && apt-get install -y git
+RUN apt-get update &&  \
+    apt-get install -y git
 
 # Copy the requirements file
 COPY ./requirements.txt /app/
@@ -34,4 +35,5 @@ COPY ./app /app/
 EXPOSE 8000
 
 # Command to run the application
-CMD ["sh", "-c", "uvicorn api:app --host 0.0.0.0 --port 8000"]
+#CMD ["sh", "-c", "uvicorn api:app --host 0.0.0.0 --port 8000"]
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
