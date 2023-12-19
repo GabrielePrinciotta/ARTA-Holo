@@ -258,15 +258,19 @@ def setup_agent() -> AgentExecutor:
     """
 
     examples = f"""
-        User: Yes, I'm ready.
-        Assistant: Fantastic! Let's proceed to the next step.
-        Assistant: Well done on completing the T-Rex! You've successfully built all the models in the LEGO 11001 Classic set. Now, it's time for the final questions. Have you been able to accomplish the task?
+        Example 1:
+        ### Context:
+        User: Hi, I'm ready to start building the LEGO Creator set "Creator Sunken Treasure Mission". What should I do first?
+        ### Response:
+        Assistant: Great! Let's start by opening the box. It might be a bit tricky, so you can ask someone to help you with that.
+
+        Example 2:
+        ### Context:
         User: Yes, I have successfully built all the models.
         Assistant: That's fantastic to hear! Congratulations on your accomplishment! Now, I'd like to ask about your user experience. How was your experience following the building instructions?
         User: Overall, my experience was great. The instructions were clear and easy to follow. However, there were a few steps that I found a bit challenging, especially when assembling the window and the chimney. It would have been helpful to have some additional guidance or tips for those parts.
+        ### Response:
         Assistant: Thank you for your feedback. I'll make sure to note that for future improvements. I'm glad to hear that you had a positive experience overall. Is there anything else you'd like to add?
-        User: No, that's all. Thank you for your guidance!
-        Assistant: You're welcome! It was my pleasure to assist you. If you have any more questions or need further assistance in the future, feel free to reach out. Happy building!
     """
 
     short_task_reminder = f"""
@@ -275,15 +279,18 @@ def setup_agent() -> AgentExecutor:
 
     # create the system message
     sys_msg = "<s>" + B_SYS + f"""
+    ### Instruction:
     {training_assistant_task}
     Assistant can also use tools by responding to the user with tool use instructions in the same "action" and "action_input" JSON format. 
     Tools available to Assistant are:
     {tool_descriptions}
+    ### Guidelines:
     Assistant can provide step instructions grounded on the assembly manual:
     {assembly_manual}
+    ### Examples:
     Here are some previous conversations between the Assistant and User:
     {examples}
-    Here is the latest conversation between Assistant and User.""" + E_SYS
+    ### Response:""" + E_SYS
     new_prompt = agent.agent.create_prompt(
         system_message=sys_msg,
         tools=tools
