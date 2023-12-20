@@ -32,16 +32,16 @@ class Config:
     # model_id = "/media/PampusData/jpei/vox-finetune/llama-2-7b-chat-teach-gpt_teacher-gpt4tools-camel-2023-11-30-22-52"
 
     # Load Hugging Face token from environment variables
-    hf_home = os.getenv("HF_HOME")
-    hf_home_token = os.getenv("HF_HOME_TOKEN")
-
-    # Set the HF_HOME environment variable
-    if hf_home:
-        os.environ["HF_HOME"] = hf_home
-
-    # Log in to Hugging Face with the provided token
-    if hf_home_token:
-        login(token=hf_home_token)
+    # hf_home = os.getenv("HF_HOME")
+    # hf_home_token = os.getenv("HF_HOME_TOKEN")
+    #
+    # # Set the HF_HOME environment variable
+    # if hf_home:
+    #     os.environ["HF_HOME"] = hf_home
+    #
+    # # Log in to Hugging Face with the provided token
+    # if hf_home_token:
+    #     login(token=hf_home_token)
 
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -50,9 +50,12 @@ class Config:
         bnb_4bit_compute_dtype=torch.bfloat16
     )
 
-    tokenizer = AutoTokenizer.from_pretrained(model_id, device_map="auto", trust_remote_code=True, token=True)
-    model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config, device_map="auto",
-                                                 trust_remote_code=True, token=True)
+    # tokenizer = AutoTokenizer.from_pretrained(model_id, device_map="auto", trust_remote_code=True, token=True)
+    # model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config, device_map="auto",
+    #                                              trust_remote_code=True, token=True)
+
+    tokenizer = AutoTokenizer.from_pretrained(model_id, device_map="auto", trust_remote_code=True)
+    model = AutoModelForCausalLM.from_pretrained(model_id, quantization_config=bnb_config, device_map="auto", trust_remote_code=True)
     model.eval()
 
     generation_config = GenerationConfig.from_pretrained(model_id)

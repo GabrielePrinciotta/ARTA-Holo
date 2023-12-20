@@ -77,12 +77,6 @@ watch -n 1 nvidia-smi
 ```
 
 ## How to get the dataset and finetuned model?
-You need this token to login huggingface hug:
-```shell
-# Credential for huggingface hub
-export HF_HOME_TOKEN="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"
-huggingface-cli login
-```
 
 ```shell
 # Load dataset directly
