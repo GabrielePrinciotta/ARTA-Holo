@@ -9,24 +9,40 @@ Therefore, there are three key phrase as follows:
 
 <img src="workflow.png" alt="workflow.png" width="75%"/>
 
+[![Code License](https://img.shields.io/badge/Code%20License-Apache_2.0-green.svg)](https://github.com/tatsu-lab/stanford_alpaca/blob/main/LICENSE)
+**Code License Usage and License Notices**: This project utilizes certain checkpoints that are subject to their respective original license. Users must comply with all terms and conditions of this original license, including but not limited to the specific license for base language models for checkpoints trained using the dataset (e.g. [Llama community license](https://ai.meta.com/llama/license/) for LLaMA-2). This project does not impose any additional constraints beyond those stipulated in the original license. Furthermore, users are reminded to ensure that their use of the checkpoints is in compliance with all applicable laws and regulations.
+
 ## How to run
+
+To download the repository, you can use the following command:
+```shell
+git clone https://gitlab.com/horizon-europe-voxreality/dialogue-system/arta.git
+```
 
 ### 1. Run locally
 
 ```shell
 export PORT=8000
 export HOST=localhost
-git clone https://gitlab.com/horizon-europe-voxreality/dialogue-system/arta.git
 cd arta/app
 python main.py
 ```
 
 ### 2. Utilizing the API-Enabled Docker Image
 To download (pull) the Docker image to your system, you can use the following command:
-```shell
-git clone https://gitlab.com/horizon-europe-voxreality/dialogue-system/arta.git
+
+```
+docker pull voxreality/training_agent:latest
 ```
 
+This command will get the conference agent image from the voxreality repository.
+
+To run the container you can use the following command:
+```
+docker run --gpus all -p 8000:8000 voxreality/training_agent:latest
+```
+
+### 3.  Build Docker Image from Code
 To run the container you can use the following command:
 ```shell
 # copy the codes in your GPU server
@@ -76,16 +92,8 @@ Check with GPU usage:
 watch -n 1 nvidia-smi
 ```
 
-## How to get the dataset and finetuned model?
-
-```shell
-# Load dataset directly
-from datasets import load_dataset
-
-# If the dataset is gated/private, make sure you have run huggingface-cli login
-dataset = load_dataset("Jiahuan/teach_edh")
-```
-
+## How to change finetuned model?
+You can change the model by assigning the model id such as "Jiahuan/vox-finetune-llama-2-7b-chat", which are public available on HuggingFace.
 ```shell
 # Load model directly
 from transformers import AutoTokenizer, AutoModelForCausalLM
