@@ -9,7 +9,7 @@ asyncio==3.4.3
 requests==2.31.0
 datasets==2.15.0
 scipy==1.11.2
-huggingface-hub==0.19.4
+huggingface-hub
 bitsandbytes
 transformers @ git+https://github.com/huggingface/transformers.git
 peft @ git+https://github.com/huggingface/peft.git
