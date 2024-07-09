@@ -111,31 +111,39 @@ async def generate_response(query: str) -> str:
 
 @app.websocket("/chatbot")
 async def websocket_endpoint_chatbot(websocket: WebSocket):
-    await authenticate_websocket(websocket)
-    await websocket.accept()
+    try:
+        #await authenticate_websocket(websocket)
+        await websocket.accept()
+        print(get_colored_text(f"{datetime.now()}\t WebSocket connection established", "green"))
 
-    while True:
-        try:
-            # Receive message
-            message = await websocket.receive_text()
-            print(get_colored_text(f"{datetime.now()}\t Server received <<<: {message}", "blue"))
+        while True:
+            try:
+                # Receive message
+                message = await websocket.receive_text()
+                print(get_colored_text(f"{datetime.now()}\t Server received <<<: {message}", "blue"))
 
-            # Perform dialogue processing here
-            # You can call Unity tools or any other logic
-            if message.startswith('ToolUnity: '):
-                info = message.split(':')[1]
-                prefix_sender = 'Unity'
-                response = await unity_simulation_response(info)  # Call Unity App!
+                # Perform dialogue processing here
+                # You can call Unity tools or any other logic
+                if message.startswith('ToolUnity: '):
+                    info = message.split(':')[1]
+                    prefix_sender = 'Unity'
+                    response = await unity_simulation_response(info)  # Call Unity App!
+                
+                else:
+                    prefix_sender = 'AI'
+                    response = await generate_response(message)  # Call AI agent!
+
                 # For now, let's echo back the message
                 await websocket.send_text(f'{prefix_sender}: {response}')
-            else:
-                # if sender in ['Human', 'Unity']:
-                prefix_sender = 'AI'
-                response = await generate_response(message)  # Call AI agent!
-                # For now, let's echo back the message
-                await websocket.send_text(f'{prefix_sender}: {response}')
-                print(get_colored_text(f"{datetime.now()}\t Server ({prefix_sender}) sent >>>: {message}", "red"))
-        except WebSocketDisconnect as e:
-            print(f"WebSocketDisconnect: {e}")
-        except Exception as e:
-            pass
+                print(get_colored_text(f"{datetime.now()}\t Server ({prefix_sender}) sent >>>: {response}", "red"))
+
+            except WebSocketDisconnect:
+                print(get_colored_text(f"{datetime.now()}\t WebSocket disconnected", "yellow"))
+                break
+
+    except Exception as e:
+        print(get_colored_text(f"{datetime.now()}\t An error occurred: {str(e)}", "red"))
+
+    finally:
+        # This block will be executed when the connection is closed, either normally or due to an error
+        print(get_colored_text(f"{datetime.now()}\t WebSocket connection closed", "yellow"))
