@@ -27,8 +27,8 @@ class Config:
     """
     # Model
     # Load model directly
-    model_id = "Jiahuan/vox-finetune-llama-2-7b-chat"
-    # model_id = "/media/PampusData/jpei/transformer_data/llama-2-7b-chat" # Base model
+    # model_id = "Jiahuan/vox-finetune-llama-2-7b-chat"
+    model_id = "/media/PampusData/jpei/transformer_data/llama-2-7b-chat" # Base model
     # model_id = "/media/PampusData/jpei/vox-finetune/llama-2-7b-chat-teach-gpt_teacher-gpt4tools-camel-2023-11-30-22-52"
 
     # Load Hugging Face token from environment variables
@@ -172,100 +172,62 @@ def setup_agent() -> AgentExecutor:
     B_SYS, E_SYS = "<<SYS>>\n", "\n<</SYS>>\n\n"
 
     training_assistant_task = f"""
-        You are a helpful AI assistant who aim to train the user how to assemble a LEGO car in XR immersive system step by step.
+        You are a helpful AI assistant who aim to train the user how to assemble a rocket engine, i.e. Raptor Engine from SpaceX, in XR immersive system step by step.
         Extended Reality (XR) directs to the assortment of Virtual Reality (VR), Augmented Reality (AR), and Mixed Reality (MR).
         Please make sure you complete the objective above with the following rules:
-        (1) The user is a trainee who is wearing HoloLen 2 glasses and is able to see XR environments in realtime.
-        (2) You are able to call Unity functions in the LEGO AR application.
+        (1) The user is a trainee who is wearing HoloLens 2 glasses and is able to see XR environments in realtime.
+        (2) You are able to call Unity functions in the Assembly application.
         (3) You are able to obtain AR Sensor Streaming data.
-        (4) Do not answer questions and tell the user you can only help with LEGO assembly task if they ask you out-of-domain questions.
+        (4) Do not answer questions and tell the user you can only help with engine assembly task if they ask you out-of-domain questions.
         (5) If you are unsure about an answer, truthfully say "I don't know"
     """
 
     assembly_manual = f"""
-        LEGO 11001 classic
+        Raptor engine assembly manual. 
 
-                                            LEGO® Audio & Braille Building Instructions 							
-        Instruction Library
+        The following are the instructions for each step of the assembly process
 
+        Step 1: There are 3 stacks of pressure transmitters and they need to be placed sequentially into the holder. 
+        Every stack has a unique place holder. So, the user needs to place each stack into the dedicated place holder. 
 
-        LEGO 11001 Classic 
-        LEGO Audio & Braille Building Instructions for the LEGO set "Classic Bricks  and Ideas".
-        Take your first steps into the world of building with LEGO bricks with a simple but fun selection of small builds:  you can build a house,  a T-Rex,  a steam locomotive and a keyboard.  But this set also includes additional bricks for your own building ideas!
-        Open the box.  This is tricky for everyone;  ask someone to help you!
-        The box contains a booklet with visual building instructions,  a loose base plate, and one small as well as one large plastic bag.
-        Carefully open the two plastic bags. (They contain the bricks for the small house, the keyboard, the steam locomotive, the T-Rex and additional bricks for your own building ideas.)
-        Before you start building,  ask a sighted person to help you sort the pieces by color.
-        First,  we will build the house.
-        (It stands on green grass,  the walls are yellow and the roof is orange.  On top,  there is a golden chimney;  some flowers grow in the front yard.  And there even is a small transparent window!).
-        The house consists of 18 pieces.  The level is easy;  however,  you might need some help assembling the window.
-        Collect the following 2 pieces:
-        1 dark green plate 4x4,
-        and 1 bright yellow brick 2x4.
-        Put the plate 4x4 on the table.
-        Put the brick 2x4 horizontally on the back two rows.
-        Find 2 bright yellow bricks 1x2.
-        Put one brick 1x2 vertically on the rightmost column at the back.
-        Repeat symmetrically on the left.
-        Next,  we will assemble the window.
-        This can be tricky;  ask someone to help you if it is too difficult.
-        Find 1 reddish brown window frame 1x2x2.
-        Put it flat on the table,  inner notch to the top,  knobs to the back.
-        Find 1 transparent glass for window frame 1x2x2.
-        Snap the window glass into the inner notch of the window frame. (The window glass has two small bumps that fit exactly into the small notches on the inside of the window frame.)
-        The window is finished!  Mount it horizontally in the middle of the second row from the back.
-        Find 2 bright yellow bricks 1x2.
-        Put one vertically to the right of the window.
-        Repeat symmetrically on the left.
-        Find 1 bright yellow plate 2x4.
-        Put it horizontally on the two back rows.
-        Collect the following 3 pieces:
-        1 bright yellow brick 2x2,
-        and 2 bright orange roof tiles 2x2.
-        Put the brick 2x2 on top in the middle of the back two rows.
-        Put one roof tile 2x2 to the right,  overhanging to the right,  slide to the right.
-        Repeat symmetrically on the left.
-        Find 2 bright orange roof tiles 2x2.
-        Put one on the right four knobs at the back,  slide to the right.
-        Repeat symmetrically on the left.
-        Find 1 warm gold small nose cone 1x1.
-        Put it on the back knob on the left.
-        (This is the chimney of the house!).
-        Find 1 dark green small nose cone 1x1.
-        Put it on the rightmost knob on the front row of the plate 4x4.
-        Find 2 bright purple flowers 1x1.
-        Put one on top.
-        Put the other one to the left on the plate 4x4.
-        The house is finished!  Well done!  Look outside the window  and wave to your neighbors!  And don't forget to water your flowers in the front yard.
+        Step 2: Same as step 1
+
+        Step 3: Same as step 1
+
+        Step 3.1: Move the metal arm in the right corner of the engine towards the other metal arm to align both of them and create a joint.
+
+        Step 4: Pick up the bolt on the table and insert to the hole at the joint securing the joint between the 2 metal arms
+
+        Step 4.1: Press the button to approve the insertion of the bolt
+
+        Step 4.2: Read the instruction and press the button to approve 
+
+        Step 5: Pick up the pin from the table and insert it to the bottom of the bolt to make sure that the bolt is secured
+
+        Step 6: Pick up the holder with the 3 pressure transmitter stacks and horizontally assemble it into the Raptor engine at the dedicated place.
+
+        Step 7: Grab the screw from the tool box on the table and mount the screw at the tip of the electric screw driver. 
+        Now, screw the pressure transmitter holder into the raptor engine.
+
+        Step 8: Same as step 7
+
+        Step 8.1: Do the wiping action following the arrows with both hands one after the other.
+
+        Step 8.2: Grab the barcode reader from the table and scan the barcode to finish the assembly steps, or simply push the button to approve.
+
     """
 
     tool_descriptions = f"""
-        "StartAssemble()": "Useful Unity tool to initiate the assembly process.",
-        "NextStep()": "Useful Unity tool to move to the next assembly step.",
-        "FrontStep()": "Useful Unity tool to go back to the previous assembly step.",
-        "Explode()": "Useful Unity tool to trigger an explosion for detailed viewing.",
-        "Recover()": "Useful Unity tool to restore the initial state of AR objects after explosion.",
-        "FinishedVideo()": "Useful Unity tool to end the assembly process and show a video of the assembled LEGO bricks.",
-        "ReSho()w": "Useful Unity tool to repeat the current assembly step.",
-        "Enlarge()": "Useful Unity tool to enlarge or zoom out the current object.",
-        "Shrink()": "Useful Unity tool to shrink or zoom in the current object.",
-        "GoToStep(StepNum)": "Useful Unity tool to go to the given an assembly step number.",
-        "Rotate(ObjName)": "Useful Unity tool to rotate the current object to a direction.",
-        "ShowPieces(PieceName)": "Useful Unity tool to show all candidate LEGO pieces to be assembled.",
-        "HighlightCorrectComponents()": "Useful Unity tool to highlight correct attachment points and components.",
-        "GetCurrentStep()": "Useful Unity tool to get the number of the current step.",
-        "GetRemainingStep()": "Useful Unity tool to get the number of the remaining steps.",
-        "CheckStepStatusVR()": "Useful Unity tool to check if the current step in Unity is accomplished correctly or not. If the current assembly sequence recorded in Unity is the same as the manual assembly sequence, then it is correct, otherwise, it is incorrect.",
-        "APICallObjectRecognitionAR(CurrentStamps)": "Useful AR tool to call the VLM agent to identify LEGO pieces based on the provided video streaming data from AR glasses and highlights the recognized pieces in the AR environment.",
-        "APICallCheckStepStatusAR(CurrentStamps)": "Useful AR tool to call the VLM agent to determine if the current assembly step is completed correctly or not, using the provided video streaming data from AR glasses as input."
+        "StartTraining()": "Initiate the assembly training.",
+        "NextStep()": "Move to the next assembly step."
     """
 
     examples = f"""
         Example 1:
         ### Context:
-        User: Hi, I'm ready to start building the LEGO Creator set "Creator Sunken Treasure Mission". What should I do first?
+        User: Hi, I'm ready to start building the Raptor engine. What should I do first?
         ### Response:
-        Assistant: Great! Let's start by opening the box. It might be a bit tricky, so you can ask someone to help you with that.
+        Assistant: Great! Let's start with step 1. It might be a bit tricky, so you can ask someone to help you with that.
 
         Example 2:
         ### Context:
@@ -277,7 +239,7 @@ def setup_agent() -> AgentExecutor:
     """
 
     short_task_reminder = f"""
-        You are an assistant whose task is to answer the user's question, execute user's commands and return response from XR application for LEGO assembly, and also respond with 'action' and 'action_input' values. Do not answer questions not related to LEGO assembly task. Be short, brief and friendly.  
+        You are an assistant whose task is to answer the user's question, execute user's commands and return response from XR application for assembly training, and also respond with 'action' and 'action_input' values. Do not answer questions not related to the assembly training. Be short, brief and friendly.  
     """
 
     # create the system message
